@@ -23,7 +23,8 @@ export default props => {
 
   const reducer = combineReducers(reducers);
   const composedStore = compose(
-    applyMiddleware(thunkMiddleware)
+    applyMiddleware(thunkMiddleware),
+    window.devToolsExtension ? window.devToolsExtension() : f => f
   );
   const storeCreator = composedStore(createStore);
   const store = storeCreator(reducer, initialState);
