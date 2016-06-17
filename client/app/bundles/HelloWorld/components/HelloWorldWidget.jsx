@@ -2,6 +2,7 @@
 // all your dump component names with Widget.
 
 import React, { PropTypes } from 'react';
+import css from './HelloWorldWidget.scss';
 
 // Simple example of a React "dumb" component
 export default class HelloWorldWidget extends React.Component {
@@ -22,7 +23,7 @@ export default class HelloWorldWidget extends React.Component {
     const { name } = this.props;
     return (
       <div className="container">
-        <h3>
+        <h3 className={css.hello}>
           Hello, {name}!
         </h3>
         <hr />

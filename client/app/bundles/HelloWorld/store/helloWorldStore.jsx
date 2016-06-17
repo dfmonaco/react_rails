@@ -9,7 +9,7 @@ import thunkMiddleware from 'redux-thunk';
 import reducers from '../reducers';
 import { initialStates } from '../reducers';
 
-export default props => {
+export default (props, serverSide) => {
   // This is how we get initial props Rails into redux.
   const { name } = props;
   const { $$helloWorldState } = initialStates;
@@ -24,7 +24,7 @@ export default props => {
   const reducer = combineReducers(reducers);
   const composedStore = compose(
     applyMiddleware(thunkMiddleware),
-    window.devToolsExtension ? window.devToolsExtension() : f => f
+    window.devToolsExtension && !serverSide ? window.devToolsExtension() : f => f
   );
   const storeCreator = composedStore(createStore);
   const store = storeCreator(reducer, initialState);

@@ -11,7 +11,8 @@ import HelloWorld from '../containers/HelloWorld';
 // railsContext provides contextual information especially useful for server rendering, such as
 // knowing the locale. See the React on Rails documentation for more info on the railsContext
 const HelloWorldApp = (props, _railsContext) => {
-  const store = createStore(props);
+  const { serverSide } = _railsContext;
+  const store = createStore(props, serverSide);
   const reactComponent = (
     <Provider store={store}>
       <HelloWorld />
