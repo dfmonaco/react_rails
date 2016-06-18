@@ -3,6 +3,7 @@
 
 import React, { PropTypes } from 'react';
 import css from './HelloWorldWidget.scss';
+import Input from 'react-toolbox/lib/input';
 
 // Simple example of a React "dumb" component
 export default class HelloWorldWidget extends React.Component {
@@ -14,8 +15,7 @@ export default class HelloWorldWidget extends React.Component {
   };
 
   // React will automatically provide us with the event `e`
-  handleChange(e) {
-    const name = e.target.value;
+  handleChange(name) {
     this.props.updateName(name);
   }
 
@@ -31,8 +31,9 @@ export default class HelloWorldWidget extends React.Component {
           <label>
             Say hello to:
           </label>
-          <input
+          <Input
             type="text"
+            label="name"
             value={name}
             onChange={e => this.handleChange(e)}
           />
