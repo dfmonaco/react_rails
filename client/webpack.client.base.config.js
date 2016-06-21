@@ -7,82 +7,107 @@ const autoprefixer = require('autoprefixer');
 const devBuild = process.env.NODE_ENV !== 'production';
 const nodeEnv = devBuild ? 'development' : 'production';
 
+console.log(__dirname);
+
 module.exports = {
 
-  // the project dir
+  // CONTEXT
+  // The base directory (absolute path!) for resolving the entry option.
+  // set to: <project_dir>/client
   context: __dirname,
+  // ENTRY
+  // The entry point for the bundle.
+  // If you pass an object: Multiple entry bundles are created.
+  // The key is the chunk name. The value can be a string or an array.
   entry: {
-
-    // See use of 'vendor' in the CommonsChunkPlugin inclusion below.
+    // Append multiple files that are NOT dependent on each other
+    // generates: vendor-bundle.js
     vendor: [
+      // Babel can’t support all of ES6 with compilation alone
+      // it also requires some runtime support
       'babel-polyfill',
+      // Monkey-patch JavaScript context to contain all EcmaScript 5 methods
+      // that can be faithfully emulated with a legacy JavaScript engine
       'es5-shim/es5-shim',
+      // Monkey-patch other ES5 methods as closely as possible.
       'es5-shim/es5-sham',
       'jquery',
+      'jquery-ujs',
       'turbolinks',
     ],
-
-    // This will contain the app entry points defined by webpack.hot.config and webpack.rails.config
+    // Append multiple files that are NOT dependent on each other
+    // generates: app-bundle.js
     app: [
       './app/bundles/HelloWorld/startup/HelloWorldApp',
     ],
   },
+
+  // RESOLVE
+  // Options affecting the resolving of modules.
   resolve: {
+    // An array of extensions that should be used to resolve modules.
+    // to help resolve imports without extensions
     extensions: ['', '.js', '.jsx'],
+    // Replace modules with other modules or paths.
+    // Expected an object with keys being module names. The value is the new path.
     alias: {
-      libs: path.join(process.cwd(), 'app', 'libs'),
-      react: path.resolve('./node_modules/react'),
-      'react-dom': path.resolve('./node_modules/react-dom'),
+      libs: path.join(__dirname, 'app', 'libs'),
     },
   },
 
+  // PLUGINS
   plugins: [
+    // Define free variables.
+    // Each key passed into DefinePlugin is an identifier
     new webpack.DefinePlugin({
       'process.env': {
         NODE_ENV: JSON.stringify(nodeEnv),
       },
       TRACE_TURBOLINKS: devBuild,
     }),
-
-    // https://webpack.github.io/docs/list-of-plugins.html#2-explicit-vendor-chunk
+    // Move modules that occur in multiple entry chunks to a new entry chunk (the commons chunk).
     new webpack.optimize.CommonsChunkPlugin({
-
-      // This name 'vendor' ties into the entry definition
+      // An existing chunk can be selected by passing a name of an existing chunk.
       name: 'vendor',
-
-      // We don't want the default vendor.js name
-      filename: 'vendor-bundle.js',
-
-      // Passing Infinity just creates the commons chunk, but moves no modules into it.
-      // In other words, we only put what's in the vendor entry definition in vendor-bundle.js
+      // The minimum number of chunks which need to contain a module before
+      // it’s moved into the commons chunk
+      // Infinity ensures that no other module goes into the vendor chunk
       minChunks: Infinity,
     }),
   ],
   module: {
     loaders: [
-      { test: /\.(woff2?|svg)$/, loader: 'url?limit=10000' },
+      // FILE
+      // Emits the file into the output folder and returns the (relative) url.
       { test: /\.(ttf|eot)$/, loader: 'file' },
-      { test: /\.(jpe?g|png|gif|svg|ico)$/, loader: 'url?limit=10000' },
-
-      { test: require.resolve('jquery'), loader: 'expose?jQuery' },
-      { test: require.resolve('jquery'), loader: 'expose?$' },
+      // URL
+      // works like the file loader, but can return a Data Url if the file is smaller than a limit.
+      { test: /\.(jpe?g|woff2?|png|gif|svg|ico)$/, loader: 'url?limit=10000' },
+      // EXPOSE
+      // Expose exports from a module to the global context
+      // require.resolve gives you the absolute path to the module
+      { test: require.resolve("jquery"), loader: "expose?$!expose?jQuery" },
+      // IMPORTS
+      // Used to inject variables into the scope of a module.
+      // Useful when a file has dependencies that are not imported via require().
+      // This loader allows you to put some modules or arbitrary JavaScript onto a local variable of the file.
+      // Modules relying on this being the window object.
+      // require.resolve gives you the absolute path to the module
       { test: require.resolve('turbolinks'), loader: 'imports?this=>window' },
-
-      // Use one of these to serve jQuery for Bootstrap scripts:
-
-      // Bootstrap 3
-      // { test: /bootstrap-sass\/assets\/javascripts\//, loader: 'imports?jQuery=jquery' },
+      { test: require.resolve('jquery-ujs'), loader: 'imports?jQuery=jquery' },
+      {
+        test: require.resolve('react'),
+        loader: 'imports',
+        query: {
+          shim: 'es5-shim/es5-shim',
+          sham: 'es5-shim/es5-sham',
+        },
+      },
     ],
   },
-
+  // postcss-loader
   // Place here all postCSS plugins here, so postcss-loader will apply them
+  // Parse CSS and add vendor prefixes to CSS rules using values from Can I Use
   postcss: [autoprefixer],
-
-  // Place here all SASS files with variables, mixins etc.
-  // And sass-resources-loader will load them in every CSS Module (SASS file) for you
-  // (so don't need to @import them explicitly)
-  // https://github.com/shakacode/sass-resources-loader
-  sassResources: ['./app/assets/styles/app-variables.scss'],
-
 };
 

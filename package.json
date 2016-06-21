@@ -2,23 +2,22 @@
   "name": "react_rails",
   "version": "0.0.1",
   "scripts": {
-    "postinstall":             "cd client && npm install",
-    "build:clean":             "rm app/assets/webpack/*",
-    "build:client":            "(cd client && npm run build:client --silent)",
-    "build:server":            "(cd client && npm run build:server --silent)",
+    "postinstall": "cd client && npm install",
+    "build:clean": "rm app/assets/webpack/*",
+    "build:client": "(cd client && npm run build:client --silent)",
+    "build:server": "(cd client && npm run build:server --silent)",
     "build:production:client": "(cd client && npm run build:production:client --silent)",
     "build:production:server": "(cd client && npm run build:production:server --silent)",
-    "build:dev:client":        "(cd client && npm run build:dev:client --silent)",
-    "build:dev:server":        "(cd client && npm run build:dev:server --silent)",
-    "hot-assets":              "(cd client && npm run hot-assets)",
-    "start":                   "(cd client && npm run start --silent)",
-    "test:client":             "(cd client && npm run test --silent)",
-    "test":                    "rspec && npm run test:client && npm run lint",
-    "lint":                    "(cd client && npm run lint --silent)"
+    "build:dev:client": "(cd client && npm run build:dev:client --silent)",
+    "build:dev:server": "(cd client && npm run build:dev:server --silent)",
+    "hot-assets": "(cd client && npm run hot-assets)",
+    "start": "(cd client && npm run start --silent)",
+    "test:client": "(cd client && npm run test --silent)",
+    "test": "rspec && npm run test:client && npm run lint",
+    "lint": "(cd client && npm run lint --silent)"
   },
   "cacheDirectories": [
     "node_modules",
     "client/node_modules"
   ]
 }
-

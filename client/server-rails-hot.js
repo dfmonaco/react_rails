@@ -2,11 +2,9 @@
 
 import webpack from 'webpack';
 import WebpackDevServer from 'webpack-dev-server';
-
 import webpackConfig from './webpack.client.rails.hot.config';
 
 const hotRailsPort = process.env.HOT_RAILS_PORT || 3500;
-
 const compiler = webpack(webpackConfig);
 
 const devServer = new WebpackDevServer(compiler, {
