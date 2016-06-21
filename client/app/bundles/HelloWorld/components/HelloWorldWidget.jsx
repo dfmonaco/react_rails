@@ -3,7 +3,7 @@
 
 import React, { PropTypes } from 'react';
 import css from './HelloWorldWidget.scss';
-import Input from 'react-toolbox/lib/input';
+import { Input } from 'react-toolbox';
 
 // Simple example of a React "dumb" component
 export default class HelloWorldWidget extends React.Component {

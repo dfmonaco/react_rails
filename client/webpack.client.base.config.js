@@ -34,6 +34,14 @@ module.exports = {
       'jquery',
       'jquery-ujs',
       'turbolinks',
+      'mirror-creator',
+      'immutable',
+      'redux',
+      'redux-thunk',
+      'react',
+      'react-redux',
+      'react-on-rails',
+      'react-toolbox',
     ],
     // Append multiple files that are NOT dependent on each other
     // generates: app-bundle.js
